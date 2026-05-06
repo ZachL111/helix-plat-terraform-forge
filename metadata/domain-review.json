@@ -1,0 +1,73 @@
+{
+  "repo": "helix-plat-terraform-forge",
+  "language": "Java",
+  "category": "Platform engineering",
+  "goal": "Package a Java local lab for terraform analysis with transition tables, invalid-transition tests, and documented operating limits.",
+  "review_model": {
+    "terms": [
+      "rollout width",
+      "quota pressure",
+      "route drift",
+      "secret scope"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "rollout width",
+      "signal": 62,
+      "slack": 47,
+      "drag": 25,
+      "confidence": 50,
+      "score": 146,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "quota pressure",
+      "signal": 66,
+      "slack": 32,
+      "drag": 18,
+      "confidence": 83,
+      "score": 193,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "route drift",
+      "signal": 69,
+      "slack": 44,
+      "drag": 17,
+      "confidence": 54,
+      "score": 185,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "secret scope",
+      "signal": 82,
+      "slack": 34,
+      "drag": 17,
+      "confidence": 72,
+      "score": 219,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "rollout width",
+      "signal": 76,
+      "slack": 42,
+      "drag": 16,
+      "confidence": 64,
+      "score": 210,
+      "lane": "ship"
+    }
+  ]
+}

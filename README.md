@@ -1,68 +1,40 @@
 # helix-plat-terraform-forge
 
-`helix-plat-terraform-forge` explores platform engineering in Java. The repository keeps the core rule set compact, then surrounds it with examples that show how the decisions move.
+`helix-plat-terraform-forge` keeps a focused Java implementation around platform engineering. The project goal is to package a Java local lab for terraform analysis with transition tables, invalid-transition tests, and documented operating limits.
 
-## Helix Plat Terraform Forge Notes
+## Reason For The Project
 
-The quickest review path is the verifier first, then the fixtures, then the operations note. That order makes it easy to see whether the code, data, and explanation still agree.
+The project exists to keep a narrow engineering decision visible and testable. For this repo, that decision is how rollout width and route drift should influence a review result.
 
-## Why This Exists
+## Helix Plat Terraform Forge Review Notes
 
-This is not a wrapper around a service. It is a self-contained project that shows how the model behaves when demand, capacity, latency, risk, and weight move in different directions.
+`recovery` and `baseline` are the cases worth reading first. They show the optimistic and cautious ends of the fixture.
 
-## Implementation Notes
+## What It Does
 
-The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying platform engineering behavior without needing a service or database unless the language project itself is SQL. The Java implementation uses a compact package layout and direct assertion checks.
+- `fixtures/domain_review.csv` adds cases for rollout width and quota pressure.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/helix-plat-terraform-walkthrough.md` walks through the case spread.
+- The Java code includes a review path for `secret scope` and `rollout width`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Example Scenarios
+## How It Is Put Together
 
-`examples/extended_cases.csv` adds six named cases. I kept the names plain so failures are easy to read in a terminal: baseline, pressure, surge, degraded, recovery, and boundary.
+The repository has two validation layers: the original compact policy fixture and the domain review fixture. They are separate so one can change without hiding failures in the other.
 
-## Feature Notes
+The Java implementation avoids hidden state so fixture changes are easy to reason about.
 
-- Uses fixture data to keep route policy changes visible in code review.
-- Includes extended examples for rollout constraints, including `surge` and `degraded`.
-- Documents environment checks tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-
-## Local Setup
-
-Use a normal shell with Java available on `PATH`. The verifier is written as a PowerShell script because the portfolio was assembled on Windows.
-
-## Tests
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
-
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Code Tour
-
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Boundaries
-
-This code is local-first. It makes no claim about deployed usage and avoids credentials, hosted state, and environment-specific setup.
-
-## Roadmap
-
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add one more platform engineering fixture that focuses on a malformed or borderline input.
-
-## Try It
+## Run It
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Check It
+
+The verifier is intentionally local. It should fail if the fixture score math, lane assignment, or language-specific test drifts.
+
+## Boundaries
+
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.
